@@ -8,7 +8,7 @@ import CardList from './components/CardList.vue'
 const items = ref([])
 
 const filters = reactive({
-  sortBy: '',
+  sortBy: 'title',
   searchQuery: ''
 })
 
@@ -16,9 +16,22 @@ const onChangeSelect = (event) => {
   filters.sortBy = event.target.value
 }
 
+const onChangeSearchInput = (event) => {
+  filters.searchQuery = event.target.value
+}
+
 const fetchItems = async () => {
   try {
-    const { data } = await axios.get('https://c74949f531e90773.mokky.dev/items')
+    const params = {
+      sortBy: filters.sortBy
+    }
+
+    if (filters.searchQuery) {
+      params.title = `*${filters.searchQuery}*`
+    }
+    const { data } = await axios.get(`https://c74949f531e90773.mokky.dev/items`, {
+      params
+    })
 
     items.value = data
   } catch (err) {
@@ -46,7 +59,7 @@ watch(filters, fetchItems)
 
       <div class="main__filter-wrap">
         <img src="/search.svg" alt="" />
-        <input class="main__filter" type="text" placeholder="Поиск" />
+        <input @input="onChangeSearchInput" class="main__filter" type="text" placeholder="Поиск" />
       </div>
     </div>
 
