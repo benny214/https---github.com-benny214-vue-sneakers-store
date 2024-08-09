@@ -1,6 +1,11 @@
 <template>
   <div class="card">
-    <img :src="isFavourite ? '/like-2.svg' : '/like-1.svg'" alt="" class="card__fav" />
+    <img
+      @click="onClickFavourite"
+      :src="isFavourite ? '/like-2.svg' : '/like-1.svg'"
+      alt=""
+      class="card__fav"
+    />
     <img :src="imageUrl" alt="" class="card__img" />
     <p class="card__title">{{ title }}</p>
 
@@ -16,16 +21,31 @@
   </div>
 </template>
 <script setup>
-defineProps({
+import { inject } from 'vue'
+
+const props = defineProps({
+  id: Number,
   imageUrl: String,
   title: String,
   price: Number,
   isFavourite: Boolean,
-  isAdded: Boolean
+  isAdded: Boolean,
+  onClickFavourite: Function
 })
 
+const addToFavourites = inject('addToFavourites')
+
+const onClickFavourite = () => {
+  const obj = {
+    ...props,
+    parentId: props.id
+  }
+
+  addToFavourites(obj)
+}
+
 const onAdd = () => {
-  console.log('add')
+  console.log('added')
 }
 </script>
 <style scoped lang="scss">

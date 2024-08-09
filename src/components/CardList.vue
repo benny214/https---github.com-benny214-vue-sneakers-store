@@ -3,9 +3,11 @@
     <Card
       v-for="item in items"
       :key="item.id"
+      :id="item.id"
       :image-url="item.imageUrl"
       :title="item.title"
       :price="item.price"
+      :is-favourite="item.isFavourite"
     />
   </div>
 </template>
