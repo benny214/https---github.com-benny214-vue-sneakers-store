@@ -43,7 +43,7 @@ const fetchFavorites = async () => {
 }
 
 const addToFavourites = async (item) => {
-  item.is = true
+  item.isFavourite = !item.isFavourite
 
   console.log(item)
 }

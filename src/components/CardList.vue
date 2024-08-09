@@ -8,16 +8,24 @@
       :title="item.title"
       :price="item.price"
       :is-favourite="item.isFavourite"
+      :on-click-favourite="() => addToFavourites(item)"
     />
   </div>
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import Card from './Card.vue'
 
 defineProps({
   items: Array
 })
+
+const addToFavourites = inject('addToFavourites')
+
+const onClickAdd = () => {
+  console.log('added')
+}
 </script>
 <style lang="scss" scoped>
 .card__list {

@@ -15,38 +15,22 @@
         <span class="card__bottom-price-value">{{ price }} руб</span>
       </div>
       <button class="card__bottom-btn">
-        <img @click="onAdd" :src="isAdded ? '/checked.svg' : '/plus.svg'" alt="" />
+        <img @click="onClickAdd" :src="isAdded ? '/checked.svg' : '/plus.svg'" alt="" />
       </button>
     </div>
   </div>
 </template>
 <script setup>
-import { inject } from 'vue'
-
-const props = defineProps({
+defineProps({
   id: Number,
   imageUrl: String,
   title: String,
   price: Number,
   isFavourite: Boolean,
   isAdded: Boolean,
-  onClickFavourite: Function
+  onClickFavourite: Function,
+  onClickAdd: Function
 })
-
-const addToFavourites = inject('addToFavourites')
-
-const onClickFavourite = () => {
-  const obj = {
-    ...props,
-    parentId: props.id
-  }
-
-  addToFavourites(obj)
-}
-
-const onAdd = () => {
-  console.log('added')
-}
 </script>
 <style scoped lang="scss">
 .card {
