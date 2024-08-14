@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <CardList :items="items" @add-to-favorite="addToFavorite" />
+    <CardList :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddToCart" />
   </div>
 </template>
 
@@ -31,6 +31,7 @@ import CardList from './components/CardList.vue'
 import Cart from './components/Cart.vue'
 
 const items = ref([])
+const cart = ref([])
 
 const cartOpen = ref(false)
 
@@ -46,6 +47,24 @@ const filters = reactive({
   sortBy: 'title',
   searchQuery: ''
 })
+
+const addToCart = (item) => {
+  cart.value.push(item)
+  item.isAdded = true
+}
+
+const removeFromCart = (item) => {
+  cart.value.splice(cart.value.indexOf(item), 1)
+  item.isAdded = false
+}
+
+const onClickAddToCart = (item) => {
+  if (!item.isAdded) {
+    addToCart(item)
+  } else {
+    removeFromCart(item)
+  }
+}
 
 const onChangeSelect = (event) => {
   filters.sortBy = event.target.value
@@ -85,10 +104,15 @@ const addToFavorite = async (item) => {
       }
 
       item.isFavorite = true
+
       const { data } = await axios.post(`https://c74949f531e90773.mokky.dev/favourites`, obj)
+
       item.favoriteId = data.id
     } else {
+      item.isFavorite = false
+
       await axios.delete(`https://c74949f531e90773.mokky.dev/favourites/${item.favoriteId}`)
+
       item.favoriteId = null
     }
   } catch (err) {
@@ -129,7 +153,10 @@ watch(filters, fetchItems)
 
 provide('cartActions', {
   closeCart,
-  openCart
+  openCart,
+  cart,
+  addToCart,
+  removeFromCart
 })
 </script>
 

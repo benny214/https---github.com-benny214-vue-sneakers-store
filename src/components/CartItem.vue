@@ -1,18 +1,27 @@
 <template>
   <div class="cart-item">
-    <img src="/sneakers/sneakers-1.jpg" alt="" />
+    <img :src="imageUrl" :alt="title" />
 
     <div class="cart-item__info">
-      <div class="cart-item__title">Мужские Кроссовки Nike Air Max 270</div>
-      <div class="cart-item__price">1205 руб</div>
+      <div class="cart-item__title">{{ title }}</div>
+      <div class="cart-item__price">{{ price }} руб</div>
     </div>
 
     <button class="cart-item__btn">
-      <img src="/close.svg" alt="" />
+      <img @click="emit('onClickRemove')" src="/close.svg" alt="" />
     </button>
   </div>
 </template>
-<script setup></script>
+<script setup>
+const emit = defineEmits(['onClickRemove'])
+
+defineProps({
+  id: Number,
+  title: String,
+  imageUrl: String,
+  price: Number
+})
+</script>
 <style lang="scss" scoped>
 .cart-item {
   padding: 20px;
@@ -35,6 +44,10 @@
     margin-left: auto;
     opacity: 0.4;
     transition: all 0.3s ease;
+    img {
+      width: 32px;
+      height: 32px;
+    }
     &:hover {
       opacity: 1;
     }

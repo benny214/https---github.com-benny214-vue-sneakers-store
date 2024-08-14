@@ -9,6 +9,8 @@
       :price="item.price"
       :isFavorite="item.isFavorite"
       :onClickFavorite="() => emit('addToFavorite', item)"
+      :onClickAdd="() => emit('addToCart', item)"
+      :isAdded="item.isAdded"
     />
   </div>
 </template>
@@ -20,11 +22,7 @@ defineProps({
   items: Array
 })
 
-const emit = defineEmits(['addToFavorite'])
-
-const onClickAdd = () => {
-  console.log('added')
-}
+const emit = defineEmits(['addToFavorite', 'addToCart'])
 </script>
 <style lang="scss" scoped>
 .card__list {
