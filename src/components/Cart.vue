@@ -3,6 +3,7 @@
     <div class="cart__inner">
       <div class="cart__title-wrap">
         <svg
+          @click="closeCart"
           width="16"
           height="14"
           viewBox="0 0 16 14"
@@ -46,7 +47,10 @@
   </div>
 </template>
 <script setup>
+import { inject } from 'vue'
 import CartList from './CartList.vue'
+
+const { closeCart } = inject('cartActions')
 </script>
 <style lang="scss" scoped>
 .cart {

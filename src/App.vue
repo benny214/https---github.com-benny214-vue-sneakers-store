@@ -1,11 +1,46 @@
+<template>
+  <Cart v-if="cartOpen" />
+
+  <div class="main">
+    <Header @open-cart="openCart" />
+
+    <div class="main__title-wrap">
+      <h2 class="main__title">Все кроссовки</h2>
+
+      <select @change="onChangeSelect" name="" id="" class="main__select">
+        <option value="name">По названию</option>
+        <option value="price">По цене (дешевле)</option>
+        <option value="-price">По цене (дороже)</option>
+      </select>
+
+      <div class="main__filter-wrap">
+        <img src="/search.svg" alt="" />
+        <input @input="onChangeSearchInput" class="main__filter" type="text" placeholder="Поиск" />
+      </div>
+    </div>
+
+    <CardList :items="items" @add-to-favorite="addToFavorite" />
+  </div>
+</template>
+
 <script setup>
 import { onMounted, ref, watch, reactive, provide } from 'vue'
 import axios from 'axios'
 import Header from './components/Header.vue'
 import CardList from './components/CardList.vue'
-//import Cart from './components/Cart.vue'
+import Cart from './components/Cart.vue'
 
 const items = ref([])
+
+const cartOpen = ref(false)
+
+const closeCart = () => {
+  cartOpen.value = false
+}
+
+const openCart = () => {
+  cartOpen.value = true
+}
 
 const filters = reactive({
   sortBy: 'title',
@@ -22,19 +57,19 @@ const onChangeSearchInput = (event) => {
 
 const fetchFavorites = async () => {
   try {
-    const { data: favourites } = await axios.get(`https://c74949f531e90773.mokky.dev/favourites`)
+    const { data: favorites } = await axios.get(`https://c74949f531e90773.mokky.dev/favourites`)
 
     items.value = items.value.map((item) => {
-      const favourite = favourites.find((favourite) => favourite.productId === item.id)
+      const favorite = favorites.find((favorite) => favorite.parentId === item.id)
 
-      if (!favourite) {
+      if (!favorite) {
         return item
       }
 
       return {
         ...item,
-        isFavourite: true,
-        favouriteId: favourite.id
+        isFavorite: true,
+        favoriteId: favorite.id
       }
     })
   } catch (err) {
@@ -42,10 +77,23 @@ const fetchFavorites = async () => {
   }
 }
 
-const addToFavourites = async (item) => {
-  item.isFavourite = !item.isFavourite
+const addToFavorite = async (item) => {
+  try {
+    if (!item.isFavorite) {
+      const obj = {
+        parentId: item.id
+      }
 
-  console.log(item)
+      item.isFavorite = true
+      const { data } = await axios.post(`https://c74949f531e90773.mokky.dev/favourites`, obj)
+      item.favoriteId = data.id
+    } else {
+      await axios.delete(`https://c74949f531e90773.mokky.dev/favourites/${item.favoriteId}`)
+      item.favoriteId = null
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const fetchItems = async () => {
@@ -63,7 +111,8 @@ const fetchItems = async () => {
 
     items.value = data.map((obj) => ({
       ...obj,
-      isFavourite: false,
+      isFavorite: false,
+      favoriteId: null,
       isAdded: false
     }))
   } catch (err) {
@@ -78,32 +127,11 @@ onMounted(async () => {
 
 watch(filters, fetchItems)
 
-provide('addToFavourites', addToFavourites)
+provide('cartActions', {
+  closeCart,
+  openCart
+})
 </script>
-
-<template>
-  <!--<Cart />-->
-  <div class="main">
-    <Header />
-
-    <div class="main__title-wrap">
-      <h2 class="main__title">Все кроссовки</h2>
-
-      <select @change="onChangeSelect" name="" id="" class="main__select">
-        <option value="name">По названию</option>
-        <option value="price">По цене (дешевле)</option>
-        <option value="-price">По цене (дороже)</option>
-      </select>
-
-      <div class="main__filter-wrap">
-        <img src="/search.svg" alt="" />
-        <input @input="onChangeSearchInput" class="main__filter" type="text" placeholder="Поиск" />
-      </div>
-    </div>
-
-    <CardList :items="items" />
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .main {

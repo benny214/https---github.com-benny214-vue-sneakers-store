@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <img
-      @click="onClickFavourite"
-      :src="isFavourite ? '/like-2.svg' : '/like-1.svg'"
+      @click="onClickFavorite"
+      :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt=""
       class="card__fav"
     />
@@ -26,9 +26,9 @@ defineProps({
   imageUrl: String,
   title: String,
   price: Number,
-  isFavourite: Boolean,
+  isFavorite: Boolean,
   isAdded: Boolean,
-  onClickFavourite: Function,
+  onClickFavorite: Function,
   onClickAdd: Function
 })
 </script>

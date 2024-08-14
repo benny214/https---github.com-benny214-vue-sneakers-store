@@ -9,7 +9,7 @@
     </div>
 
     <ul class="header__menu">
-      <li class="header__menu-item">
+      <li @click="() => emit('openCart')" class="header__menu-item">
         <img src="/cart.svg" alt="" class="header__menu-icon" />
         <span class="header__menu-text">1205 руб</span>
       </li>
@@ -24,7 +24,13 @@
     </ul>
   </header>
 </template>
-<script setup></script>
+<script setup>
+const emit = defineEmits(['openCart'])
+
+// const openCart = () => {
+//   emit('openCart')
+// }
+</script>
 <style lang="scss" scoped>
 .header {
   display: flex;
