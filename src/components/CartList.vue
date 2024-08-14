@@ -6,7 +6,7 @@
       :title="item.title"
       :image-url="item.imageUrl"
       :price="item.price"
-      @onClickRemove="() => removeFromCart(item)"
+      @on-click-remove="() => removeFromCart(item)"
     />
   </div>
 </template>

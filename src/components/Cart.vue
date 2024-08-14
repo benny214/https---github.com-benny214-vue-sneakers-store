@@ -44,6 +44,7 @@
         <button class="cart__btn">Оформить заказ</button>
       </div>
     </div>
+    <div class="cart__backdrop" @click="closeCart"></div>
   </div>
 </template>
 <script setup>
@@ -59,8 +60,15 @@ const { closeCart } = inject('cartActions')
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
   &__inner {
     background-color: #fff;
     width: 40%;

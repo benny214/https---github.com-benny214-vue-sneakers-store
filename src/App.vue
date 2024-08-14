@@ -2,7 +2,7 @@
   <Cart v-if="cartOpen" />
 
   <div class="main">
-    <Header @open-cart="openCart" />
+    <Header :total-price="totalPrice" @open-cart="openCart" />
 
     <div class="main__title-wrap">
       <h2 class="main__title">Все кроссовки</h2>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, reactive, provide } from 'vue'
+import { onMounted, ref, watch, reactive, provide, computed } from 'vue'
 import axios from 'axios'
 import Header from './components/Header.vue'
 import CardList from './components/CardList.vue'
@@ -34,6 +34,8 @@ const items = ref([])
 const cart = ref([])
 
 const cartOpen = ref(false)
+
+const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 
 const closeCart = () => {
   cartOpen.value = false
