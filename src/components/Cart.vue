@@ -33,12 +33,12 @@
       <div class="cart__details">
         <div class="cart__total">
           <span class="cart__total-title">Итого:</span>
-          <span class="cart__total-price">12995 руб</span>
+          <span class="cart__total-price">{{ totalPrice }} руб</span>
         </div>
 
         <div class="cart__tax">
           <span class="cart__tax-title">Налог 5%: </span>
-          <span class="cart__tax-price">1205 руб</span>
+          <span class="cart__tax-price">{{ vatPrice }} руб</span>
         </div>
 
         <button class="cart__btn">Оформить заказ</button>
@@ -50,6 +50,11 @@
 <script setup>
 import { inject } from 'vue'
 import CartList from './CartList.vue'
+
+defineProps({
+  totalPrice: Number,
+  vatPrice: Number
+})
 
 const { closeCart } = inject('cartActions')
 </script>
