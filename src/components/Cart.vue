@@ -37,7 +37,7 @@
 
       <CartList />
 
-      <div class="cart__details">
+      <div v-if="totalPrice" class="cart__details">
         <div class="cart__total">
           <span class="cart__total-title">Итого:</span>
           <span class="cart__total-price">{{ totalPrice }} руб</span>

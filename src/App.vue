@@ -86,6 +86,7 @@ const createOrder = async () => {
     return data
   } catch (err) {
     console.log(err)
+  } finally {
     isCreatingOrder.value = false
   }
 }
