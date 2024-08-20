@@ -28,6 +28,13 @@
         <h2 class="cart__title">Корзина</h2>
       </div>
 
+      <InfoBlock
+        v-if="totalPrice === 0"
+        image-url="/package-icon.png"
+        title="Корзина пуста"
+        description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ"
+      />
+
       <CartList />
 
       <div class="cart__details">
@@ -41,7 +48,9 @@
           <span class="cart__tax-price">{{ vatPrice }} руб</span>
         </div>
 
-        <button class="cart__btn">Оформить заказ</button>
+        <button class="cart__btn" @click="() => emit('createOrder')" :disabled="disabledButton">
+          Оформить заказ
+        </button>
       </div>
     </div>
     <div class="cart__backdrop" @click="closeCart"></div>
@@ -50,10 +59,14 @@
 <script setup>
 import { inject } from 'vue'
 import CartList from './CartList.vue'
+import InfoBlock from './InfoBlock.vue'
+
+const emit = defineEmits(['createOrder'])
 
 defineProps({
   totalPrice: Number,
-  vatPrice: Number
+  vatPrice: Number,
+  disabledButton: Boolean
 })
 
 const { closeCart } = inject('cartActions')
@@ -128,6 +141,13 @@ const { closeCart } = inject('cartActions')
     transition: all 0.3s ease;
     &:hover {
       background-color: #698743;
+    }
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      &:hover {
+        background-color: #ccc;
+      }
     }
   }
 }

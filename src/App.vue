@@ -1,5 +1,11 @@
 <template>
-  <Cart v-if="cartOpen" :total-price="totalPrice" :vat-price="vatPrice" />
+  <Cart
+    v-if="cartOpen"
+    :total-price="totalPrice"
+    :vat-price="vatPrice"
+    @create-order="createOrder"
+    :disabledButton="disabledCartButton"
+  />
 
   <div class="main">
     <Header :total-price="totalPrice" @open-cart="openCart" />
@@ -32,12 +38,17 @@ import Cart from './components/Cart.vue'
 
 const items = ref([])
 const cart = ref([])
+const isCreatingOrder = ref(false)
 
 const cartOpen = ref(false)
 
 const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 
 const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
+
+const carttIsEmpty = computed(() => cart.value.length === 0)
+
+const disabledCartButton = computed(() => isCreatingOrder.value || carttIsEmpty.value)
 
 const closeCart = () => {
   cartOpen.value = false
@@ -60,6 +71,23 @@ const addToCart = (item) => {
 const removeFromCart = (item) => {
   cart.value.splice(cart.value.indexOf(item), 1)
   item.isAdded = false
+}
+
+const createOrder = async () => {
+  try {
+    isCreatingOrder.value = true
+    const { data } = await axios.post('https://c74949f531e90773.mokky.dev/orders', {
+      items: cart.value,
+      totalPrice: totalPrice.value
+    })
+
+    cart.value = []
+
+    return data
+  } catch (err) {
+    console.log(err)
+    isCreatingOrder.value = false
+  }
 }
 
 const onClickAddToCart = (item) => {
@@ -154,6 +182,13 @@ onMounted(async () => {
 })
 
 watch(filters, fetchItems)
+
+watch(cart, () => {
+  items.value = items.value.map((item) => ({
+    ...item,
+    isAdded: false
+  }))
+})
 
 provide('cartActions', {
   closeCart,
