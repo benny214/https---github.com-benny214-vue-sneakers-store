@@ -35,7 +35,6 @@ import axios from 'axios'
 import Header from './components/Header.vue'
 import CardList from './components/CardList.vue'
 import Cart from './components/Cart.vue'
-import CartItem from './components/CartItem.vue'
 
 const items = ref([])
 const cart = ref([])

@@ -1,5 +1,5 @@
 <template>
-  <div class="card__list">
+  <div v-auto-animate class="card__list">
     <Card
       v-for="item in items"
       :key="item.id"
