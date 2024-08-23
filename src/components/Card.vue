@@ -1,6 +1,7 @@
 <template>
   <div class="card">
     <img
+      v-if="onClickFavorite"
       @click="onClickFavorite"
       :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt=""
@@ -14,7 +15,7 @@
         <span class="card__bottom-price-title">Цена</span>
         <span class="card__bottom-price-value">{{ price }} руб</span>
       </div>
-      <button class="card__bottom-btn">
+      <button v-if="onClickAdd" class="card__bottom-btn">
         <img @click="onClickAdd" :src="isAdded ? '/checked.svg' : '/plus.svg'" alt="" />
       </button>
     </div>

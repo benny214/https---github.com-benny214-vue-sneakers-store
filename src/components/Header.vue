@@ -11,16 +11,18 @@
     </router-link>
 
     <ul class="header__menu">
-      <li @click="() => emit('openCart')" class="header__menu-item">
-        <img src="/cart.svg" alt="" class="header__menu-icon" />
-        <span class="header__menu-text">{{ totalPrice }} руб</span>
-      </li>
       <li class="header__menu-item">
         <router-link to="/favorites">
           <img src="/heart.svg" alt="" class="header__menu-icon" />
           <span class="header__menu-text">Закладки</span>
         </router-link>
       </li>
+
+      <li @click="() => emit('openCart')" class="header__menu-item">
+        <img src="/cart.svg" alt="" class="header__menu-icon" />
+        <span class="header__menu-text">{{ totalPrice }} руб</span>
+      </li>
+
       <!-- <li class="header__menu-item">
         <img src="/profile.svg" alt="" class="header__menu-icon" />
         <b class="header__menu-text">Профиль</b>
