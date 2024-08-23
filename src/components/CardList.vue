@@ -24,7 +24,7 @@ defineProps({
 
 const emit = defineEmits(['addToFavorite', 'addToCart'])
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .card__list {
   display: flex;
   flex-wrap: wrap;

@@ -1,12 +1,14 @@
 <template>
   <header class="header">
-    <div class="header__logo">
-      <img src="/logo.png" alt="" class="" />
-      <div class="header__logo-text">
-        <h2 class="header__logo-title">Vue Sneaker</h2>
-        <p class="header__logo-subtitle">магазин лучших кроссовок</p>
+    <router-link to="/"
+      ><div class="header__logo">
+        <img src="/logo.png" alt="" class="" />
+        <div class="header__logo-text">
+          <h2 class="header__logo-title">Vue Sneaker</h2>
+          <p class="header__logo-subtitle">магазин лучших кроссовок</p>
+        </div>
       </div>
-    </div>
+    </router-link>
 
     <ul class="header__menu">
       <li @click="() => emit('openCart')" class="header__menu-item">
@@ -14,13 +16,15 @@
         <span class="header__menu-text">{{ totalPrice }} руб</span>
       </li>
       <li class="header__menu-item">
-        <img src="/heart.svg" alt="" class="header__menu-icon" />
-        <span class="header__menu-text">Закладки</span>
+        <router-link to="/favorites">
+          <img src="/heart.svg" alt="" class="header__menu-icon" />
+          <span class="header__menu-text">Закладки</span>
+        </router-link>
       </li>
-      <li class="header__menu-item">
+      <!-- <li class="header__menu-item">
         <img src="/profile.svg" alt="" class="header__menu-icon" />
         <b class="header__menu-text">Профиль</b>
-      </li>
+      </li>-->
     </ul>
   </header>
 </template>
@@ -57,7 +61,8 @@ const emit = defineEmits(['openCart'])
     display: flex;
     align-items: center;
     gap: 15px;
-    &-item {
+    &-item,
+    &-item a {
       display: flex;
       align-items: center;
       gap: 8px;

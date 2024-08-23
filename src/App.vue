@@ -10,33 +10,18 @@
   <div class="main">
     <Header :total-price="totalPrice" @open-cart="openCart" />
 
-    <div class="main__title-wrap">
-      <h2 class="main__title">Все кроссовки</h2>
-
-      <select @change="onChangeSelect" name="" id="" class="main__select">
-        <option value="name">По названию</option>
-        <option value="price">По цене (дешевле)</option>
-        <option value="-price">По цене (дороже)</option>
-      </select>
-
-      <div class="main__filter-wrap">
-        <img src="/search.svg" alt="" />
-        <input @input="onChangeSearchInput" class="main__filter" type="text" placeholder="Поиск" />
-      </div>
-    </div>
-
-    <CardList :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddToCart" />
+    <router-view></router-view>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch, reactive, provide, computed } from 'vue'
+import { ref, watch, provide, computed } from 'vue'
 import axios from 'axios'
+
 import Header from './components/Header.vue'
-import CardList from './components/CardList.vue'
 import Cart from './components/Cart.vue'
 
-const items = ref([])
+/* Корзина (START)*/
 const cart = ref([])
 const isCreatingOrder = ref(false)
 
@@ -57,11 +42,6 @@ const closeCart = () => {
 const openCart = () => {
   cartOpen.value = true
 }
-
-const filters = reactive({
-  sortBy: 'title',
-  searchQuery: ''
-})
 
 const addToCart = (item) => {
   cart.value.push(item)
@@ -91,114 +71,6 @@ const createOrder = async () => {
   }
 }
 
-const onClickAddToCart = (item) => {
-  if (!item.isAdded) {
-    addToCart(item)
-  } else {
-    removeFromCart(item)
-  }
-}
-
-const onChangeSelect = (event) => {
-  filters.sortBy = event.target.value
-}
-
-const onChangeSearchInput = (event) => {
-  filters.searchQuery = event.target.value
-}
-
-const fetchFavorites = async () => {
-  try {
-    const { data: favorites } = await axios.get(`https://c74949f531e90773.mokky.dev/favourites`)
-
-    items.value = items.value.map((item) => {
-      const favorite = favorites.find((favorite) => favorite.parentId === item.id)
-
-      if (!favorite) {
-        return item
-      }
-
-      return {
-        ...item,
-        isFavorite: true,
-        favoriteId: favorite.id
-      }
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-const addToFavorite = async (item) => {
-  try {
-    if (!item.isFavorite) {
-      const obj = {
-        parentId: item.id
-      }
-
-      item.isFavorite = true
-
-      const { data } = await axios.post(`https://c74949f531e90773.mokky.dev/favourites`, obj)
-
-      item.favoriteId = data.id
-    } else {
-      item.isFavorite = false
-
-      await axios.delete(`https://c74949f531e90773.mokky.dev/favourites/${item.favoriteId}`)
-
-      item.favoriteId = null
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-const fetchItems = async () => {
-  try {
-    const params = {
-      sortBy: filters.sortBy
-    }
-
-    if (filters.searchQuery) {
-      params.title = `*${filters.searchQuery}*`
-    }
-    const { data } = await axios.get(`https://c74949f531e90773.mokky.dev/items`, {
-      params
-    })
-
-    items.value = data.map((obj) => ({
-      ...obj,
-      isFavorite: false,
-      favoriteId: null,
-      isAdded: false
-    }))
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-onMounted(async () => {
-  const localCart = localStorage.getItem('cart')
-  cart.value = localCart ? JSON.parse(localCart) : []
-
-  await fetchItems()
-  await fetchFavorites()
-
-  items.value = items.value.map((item) => ({
-    ...item,
-    isAdded: cart.value.some((cartItem) => cartItem.id === item.id)
-  }))
-})
-
-watch(filters, fetchItems)
-
-watch(cart, () => {
-  items.value = items.value.map((item) => ({
-    ...item,
-    isAdded: false
-  }))
-})
-
 watch(
   cart,
   () => {
@@ -214,6 +86,8 @@ provide('cartActions', {
   addToCart,
   removeFromCart
 })
+
+/* Корзина (END)*/
 </script>
 
 <style lang="scss" scoped>
@@ -224,36 +98,5 @@ provide('cartActions', {
   margin: 20px auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
-  &__title {
-    font-size: 24px;
-    font-weight: 600;
-    padding: 20px;
-    &-wrap {
-      display: flex;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-  }
-  &__select {
-    border: 1px solid #e7e7e7;
-    border-radius: 10px;
-    padding: 10px;
-    margin-left: 20px;
-  }
-  &__filter {
-    border: 1px solid #e7e7e7;
-    border-radius: 10px;
-    padding: 10px 30px;
-    &-wrap {
-      margin-left: auto;
-      position: relative;
-      img {
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translateY(-50%);
-      }
-    }
-  }
 }
 </style>
