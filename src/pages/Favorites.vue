@@ -1,5 +1,8 @@
 <template>
-  <CardList :items="favorites" is-favorites />
+  <div class="favorites">
+    <h2 class="favorites__title">Избранное</h2>
+    <CardList :items="favorites" is-favorites />
+  </div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -22,8 +25,22 @@ onMounted(async () => {
 })
 </script>
 <style lang="scss" scoped>
-.card__list {
-  padding-top: 40px;
-  padding-bottom: 40px;
+.favorites {
+  &__title {
+    font-size: 24px;
+    font-weight: 600;
+    padding: 20px;
+  }
+
+  .card__list {
+    padding-bottom: 40px;
+    :deep(.card) {
+      &:hover {
+        transform: none;
+        box-shadow: none;
+        border: 1px solid #e7e7e7;
+      }
+    }
+  }
 }
 </style>
